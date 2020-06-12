@@ -1,11 +1,16 @@
 #include "HeaderStorage.h"
+#include "IQueryMsg.h"
 #include "DBSave.h"
 
 
-DBSave::DBSave()
+
+
+DBSave::DBSave(char * schemaName) : _schemaName(schemaName)
 {
 	_bTurnOff = false;
+	_hMsgEnQ = CreateEventA(NULL, false, false, nullptr);
 }
+
 
 
 DBSave::~DBSave()
@@ -27,6 +32,15 @@ HANDLE DBSave::CreateDBThread()
 
 
 
+void DBSave::EnqueueMsg(IQueryMsg * pMsg)
+{
+	_msgQueue.Enqueue(pMsg);
+	SetEvent(_hMsgEnQ);
+}
+
+
+
+
 
 
 
@@ -37,7 +51,7 @@ UINT __stdcall DBSave::DBSaveThread(LPVOID arg)
 
 
 
-	for(;;)
+	for (;;)
 	{
 		WaitForSingleObject(pThis->_hMsgEnQ, INFINITE);
 
@@ -58,6 +72,9 @@ UINT __stdcall DBSave::DBSaveThread(LPVOID arg)
 	}
 
 
+	// DB와 연결종료
+	mysql_close(pThis->_dbLink);
+
 	return 0;
 }
 
@@ -69,11 +86,12 @@ UINT __stdcall DBSave::DBSaveThread(LPVOID arg)
 
 void DBSave::SwitchMsg()
 {
+
 	//--------------------------------------------------------
 	// 1. MsgQueue에서 Dequeue
 	//--------------------------------------------------------
 
-	CSerializeBuffer* pMsg = nullptr;
+	IQueryMsg* pMsg = nullptr;
 	if (!_msgQueue.Dequeue(&pMsg))
 	{
 		CLog::Log(L"DB", CLog::LEVEL_ERROR, L"Dequeue Failed");
@@ -83,71 +101,20 @@ void DBSave::SwitchMsg()
 
 
 	//--------------------------------------------------------
-	// 2. 직렬화버퍼에서 헤더부분만 Dequeue
+	// 2. Query 생성
 	//--------------------------------------------------------
 
-	st_DBQUERY_HEADER header;
-	pMsg->GetData((char*)&header, sizeof(st_DBQUERY_HEADER));
+	char* pQuery = pMsg->CreateQuery();
 
-	
+
 
 	//--------------------------------------------------------
-	// 3. Type에 따라 분리
+	// 3. Query 전송
 	//--------------------------------------------------------
 
-	switch (header.Type)
-	{
-	case df_DBQUERY_MSG_NEW_ACCOUNT:
-	{
-		MsgProc_NewAccount(pMsg);
-		break;
-	}
-
-	case df_DBQUERY_MSG_STAGE_CLEAR:
-	{
-		MsgProc_StageClear(pMsg);
-		break;
-	}
-
-	case df_DBQUERY_MSG_PLAYER:
-	{
-		MsgProc_PlayerInfo(pMsg);
-		break;
-	}
-
-	default:
-		CLog::Log(L"DB", CLog::LEVEL_ERROR, L"Defalut Type of Header, SwitchMsg()");
-		CCrashDump::Crash();
-	}
-
+	SendQuery(pQuery);
 
 }
-
-
-
-
-
-void DBSave::MsgProc_NewAccount(CSerializeBuffer * pMsg)
-{
-	char query[] = "UPDATE test_server.account SET value = value + 1";
-
-	SendQuery(query);
-}
-
-void DBSave::MsgProc_StageClear(CSerializeBuffer * pMsg)
-{
-	char query[] = "UPDATE test_server.stage SET value = value + 1";
-
-	SendQuery(query);
-}
-
-void DBSave::MsgProc_PlayerInfo(CSerializeBuffer * pMsg)
-{
-	char query[] = "UPDATE test_server.player SET value = value + 1";
-
-	SendQuery(query);
-}
-
 
 
 
@@ -163,7 +130,7 @@ void DBSave::DBConnect()
 	// DB 연결
 	_dbLink = mysql_real_connect(&conn, "127.0.0.1", "root", "root", "test_server", 3306, (char *)NULL, 0);
 	if (_dbLink == NULL)
-	{	
+	{
 		CLog::Log(L"DB", CLog::LEVEL_ERROR, L"Mysql connection error : %s", mysql_error(&conn));
 		CCrashDump::Crash();
 	}
@@ -175,9 +142,44 @@ void DBSave::DBConnect()
 void DBSave::SendQuery(char * pQuery)
 {
 	int queryRes = mysql_query(_dbLink, pQuery);
+
 	if (queryRes != 0)
 	{
+		if (ConnectError(mysql_errno(_dbLink)))
+		{
+			mysql_query(_dbLink, pQuery);
+		}
+
+		else
+		{
+			CLog::Log(L"DB", CLog::LEVEL_ERROR, L"Failed to Reconnect");
+			CCrashDump::Crash();
+		}
 
 	}
+}
 
+
+bool DBSave::ConnectError(int errorNo)
+{
+	CLog::Log(L"DB", CLog::LEVEL_WARNING, L"MYSQL Connection has closed, Error No : %d", errorNo);
+
+	// Try Reconnect
+	if (errorNo == CR_SOCKET_CREATE_ERROR
+		|| errorNo == CR_CONNECTION_ERROR
+		|| errorNo == CR_CONN_HOST_ERROR
+		|| errorNo == CR_SERVER_GONE_ERROR
+		|| errorNo == CR_SERVER_HANDSHAKE_ERR
+		|| errorNo == CR_SERVER_LOST
+		|| errorNo == CR_INVALID_CONN_HANDLE)
+	{
+
+		for (int i = 0; i < 20; i++)
+		{
+			if (mysql_ping(_dbLink) == 0)
+				break;
+		}
+
+
+	}
 }

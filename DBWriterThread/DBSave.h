@@ -2,11 +2,13 @@
 class DBSave
 {
 public:
-	DBSave();
+	DBSave(char* schemaName);
 	~DBSave();
 
 	HANDLE	CreateDBThread();
 	void	StopThread() { _bTurnOff = true; }
+
+	void	EnqueueMsg(IQueryMsg* pMsg);
 
 private:
 	static UINT WINAPI DBSaveThread(LPVOID);
@@ -16,9 +18,6 @@ private:
 
 	void	SwitchMsg();
 
-	void	MsgProc_NewAccount(CSerializeBuffer*);
-	void	MsgProc_StageClear(CSerializeBuffer*);
-	void	MsgProc_PlayerInfo(CSerializeBuffer*);
 
 
 
@@ -26,21 +25,19 @@ private:
 
 	void DBConnect();
 	void SendQuery(char* pQuery);
-	void ConnectError(int errorNo);
+	bool ConnectError(int errorNo);
 
 private:
 
-	LockFreeQueue<CSerializeBuffer*>	_msgQueue;
+	LockFreeQueue<IQueryMsg*>	_msgQueue;
 	
 	MYSQL*	_dbLink;
 
 	HANDLE	_hDBThread;
 	HANDLE	_hMsgEnQ;
 
+	char*	_schemaName;
 	bool	_bTurnOff;
-
 
 };
 
-
-// 해당 클래스는 단일 DB 쓰레드만을 지원하는 코드로, 멀티쓰레드로 돌릴 경우 문제 발생

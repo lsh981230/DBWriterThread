@@ -13,21 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="헤더 파일\QueryMsgClass">
+      <UniqueIdentifier>{54c863bf-2187-480a-bd49-c904a3cc4b81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\QueryMsgClass">
+      <UniqueIdentifier>{3893d1ca-9b9c-4dd3-bd8a-dcd26f5e6778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Library">
+      <UniqueIdentifier>{0081593f-8213-427d-af43-d612682fb551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Library">
+      <UniqueIdentifier>{69e497ae-d0a4-473d-934d-1c66e057d14c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MessageHeader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CCrashDump.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CLog.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="LockFreeFreeList.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="LockFreeQueue.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="HeaderStorage.h">
@@ -36,25 +36,58 @@
     <ClInclude Include="DBSave.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="IQueryMsg.h">
+      <Filter>헤더 파일\QueryMsgClass</Filter>
+    </ClInclude>
+    <ClInclude Include="QMStageClear.h">
+      <Filter>헤더 파일\QueryMsgClass</Filter>
+    </ClInclude>
+    <ClInclude Include="QMAccountRegist.h">
+      <Filter>헤더 파일\QueryMsgClass</Filter>
+    </ClInclude>
+    <ClInclude Include="QMPlayerInfo.h">
+      <Filter>헤더 파일\QueryMsgClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CCrashDump.h">
+      <Filter>헤더 파일\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="CLog.h">
+      <Filter>헤더 파일\Library</Filter>
+    </ClInclude>
     <ClInclude Include="CSerializeBuffer.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeFreeList.h">
+      <Filter>헤더 파일\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeQueue.h">
+      <Filter>헤더 파일\Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CCrashDump.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CLog.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DBSave.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="QMStageClear.cpp">
+      <Filter>소스 파일\QueryMsgClass</Filter>
+    </ClCompile>
+    <ClCompile Include="QMAccountRegist.cpp">
+      <Filter>소스 파일\QueryMsgClass</Filter>
+    </ClCompile>
+    <ClCompile Include="QMPlayerInfo.cpp">
+      <Filter>소스 파일\QueryMsgClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CCrashDump.cpp">
+      <Filter>소스 파일\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="CLog.cpp">
+      <Filter>소스 파일\Library</Filter>
+    </ClCompile>
     <ClCompile Include="CSerializeBuffer.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Library</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
