@@ -1,9 +1,15 @@
-#include <iostream>
-#include "QMStageClear.h"
+#include "HeaderStorage.h"
 
 
 QMStageClear::QMStageClear()
 {
+}
+
+QMStageClear::QMStageClear(char * schemaName, char * tableName)
+{
+	_value = 0;
+	_schemaName = schemaName;
+	_tableName = tableName;
 }
 
 
@@ -12,11 +18,11 @@ QMStageClear::~QMStageClear()
 }
 
 
-char * QMStageClear::CreateQuery(int value)
+char * QMStageClear::CreateQuery()
 {
 	ZeroMemory(_query, sizeof(_query));
 
-	sprintf(_query, "INSERT into %s.%s (value) VALUES %d", _schemaName, _tableName, value);
+	sprintf_s(_query, "INSERT into %s (value) VALUES (%d)", _tableName, ++_value);
 
 
 	return _query;

@@ -57,7 +57,7 @@ void CLog::Log(const WCHAR * Type, int logLevel, const WCHAR * logStringFormat, 
 	// 1. Log 내용 받아오기
 	//---------------------------------------------------------
 
-	WCHAR log[1024] = { 0, };
+	WCHAR log[1024] = L"";
 
 
 	va_list args;

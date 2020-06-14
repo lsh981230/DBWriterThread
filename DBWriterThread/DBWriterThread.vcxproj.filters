@@ -54,9 +54,6 @@
     <ClInclude Include="CLog.h">
       <Filter>헤더 파일\Library</Filter>
     </ClInclude>
-    <ClInclude Include="CSerializeBuffer.h">
-      <Filter>헤더 파일\Library</Filter>
-    </ClInclude>
     <ClInclude Include="LockFreeFreeList.h">
       <Filter>헤더 파일\Library</Filter>
     </ClInclude>
@@ -84,9 +81,6 @@
       <Filter>소스 파일\Library</Filter>
     </ClCompile>
     <ClCompile Include="CLog.cpp">
-      <Filter>소스 파일\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="CSerializeBuffer.cpp">
       <Filter>소스 파일\Library</Filter>
     </ClCompile>
   </ItemGroup>

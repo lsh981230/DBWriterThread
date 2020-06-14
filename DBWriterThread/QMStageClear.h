@@ -1,18 +1,19 @@
 #pragma once
-#include "IQueryMsg.h"
 class QMStageClear :
 	public IQueryMsg
 {
 public:
 	QMStageClear();
-	QMStageClear(char* schemaName, char* tableName) {}
-	virtual ~QMStageClear();
+	QMStageClear(char* schemaName, char* tableName);
 
+	~QMStageClear();
 
-	char* CreateQuery(int value) override;
+	char* CreateQuery() override;
+
 public:
 
-	__int64	iAccountNo;
-	int	iStageID;
+	int		_value;
+	int		_stageID;
+	__int64	_accountNo;
 };
 

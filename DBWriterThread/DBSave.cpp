@@ -1,6 +1,4 @@
 #include "HeaderStorage.h"
-#include "IQueryMsg.h"
-#include "DBSave.h"
 
 
 
@@ -15,6 +13,7 @@ DBSave::DBSave(char * schemaName) : _schemaName(schemaName)
 
 DBSave::~DBSave()
 {
+	printf("A");
 }
 
 
@@ -24,6 +23,7 @@ DBSave::~DBSave()
 
 HANDLE DBSave::CreateDBThread()
 {
+
 	_hDBThread = (HANDLE)_beginthreadex(NULL, 0, DBSaveThread, this, 0, nullptr);
 
 	return _hDBThread;
@@ -104,6 +104,7 @@ void DBSave::SwitchMsg()
 	// 2. Query 생성
 	//--------------------------------------------------------
 
+	
 	char* pQuery = pMsg->CreateQuery();
 
 
@@ -124,13 +125,14 @@ void DBSave::DBConnect()
 
 
 	// 초기화
-	mysql_init(&conn);
+	_dbLink = mysql_init(&conn);
 
 
 	// DB 연결
 	_dbLink = mysql_real_connect(&conn, "127.0.0.1", "root", "root", "test_server", 3306, (char *)NULL, 0);
 	if (_dbLink == NULL)
 	{
+		fprintf(stderr, "ERROR : %s", mysql_error(&conn));
 		CLog::Log(L"DB", CLog::LEVEL_ERROR, L"Mysql connection error : %s", mysql_error(&conn));
 		CCrashDump::Crash();
 	}
@@ -177,9 +179,13 @@ bool DBSave::ConnectError(int errorNo)
 		for (int i = 0; i < 20; i++)
 		{
 			if (mysql_ping(_dbLink) == 0)
-				break;
+			{
+				return true;
+			}
 		}
 
 
 	}
+
+	return false;
 }

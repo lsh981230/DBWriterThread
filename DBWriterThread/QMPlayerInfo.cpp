@@ -1,9 +1,15 @@
-#include <iostream>
-#include "QMPlayerInfo.h"
+#include "HeaderStorage.h"
 
 
 QMPlayerInfo::QMPlayerInfo()
 {
+}
+
+QMPlayerInfo::QMPlayerInfo(char * schemaName, char * tableName)
+{
+	_value = 0;
+	_schemaName = schemaName;
+	_tableName = tableName;
 }
 
 
@@ -11,11 +17,11 @@ QMPlayerInfo::~QMPlayerInfo()
 {
 }
 
-char * QMPlayerInfo::CreateQuery(int value)
+char * QMPlayerInfo::CreateQuery()
 {
 	ZeroMemory(_query, sizeof(_query));
 
-	sprintf(_query, "INSERT into %s.%s (value) VALUES %d", _schemaName, _tableName, value);
+	sprintf_s(_query, "INSERT into %s (value) VALUES (%d)", _tableName, ++_value);
 
 
 	return _query;

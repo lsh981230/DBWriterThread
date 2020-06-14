@@ -16,7 +16,6 @@
 #include "CLog.h"
 #include "CCrashDump.h"
 
-#include "CSerializeBuffer.h"
 
 
 // 락프리 관련 헤더
@@ -25,3 +24,11 @@
 
 
 #include "MessageHeader.h"
+
+#include "IQueryMsg.h"
+
+#include "QMAccountRegist.h"
+#include "QMPlayerInfo.h"
+#include "QMStageClear.h"
+
+#include "DBSave.h"

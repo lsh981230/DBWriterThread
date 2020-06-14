@@ -54,14 +54,14 @@ typedef int my_socket;
 #endif /* my_socket_defined */
 #endif /* MY_GLOBAL_INCLUDED */
 
-#include "mysql_version.h"
-#include "mysql_com.h"
-#include "mysql_time.h"
+#include "include/mysql_version.h"
+#include "include/mysql_com.h"
+#include "include/mysql_time.h"
 
-#include "my_list.h" /* for LISTs used in 'MYSQL' and 'MYSQL_STMT' */
+#include "include/my_list.h" /* for LISTs used in 'MYSQL' and 'MYSQL_STMT' */
 
 /* Include declarations of plug-in API */
-#include "mysql/client_plugin.h"
+#include "include/mysql/client_plugin.h"
 
 /*
   Declare my_init() here because it is a documented C API function exported
@@ -122,7 +122,7 @@ typedef unsigned long long my_ulonglong;
 #endif
 #endif
 
-#include "typelib.h"
+#include "include/typelib.h"
 
 #define MYSQL_COUNT_ERROR (~(my_ulonglong) 0)
 
@@ -137,7 +137,7 @@ typedef struct st_mysql_rows {
 
 typedef MYSQL_ROWS *MYSQL_ROW_OFFSET;	/* offset to current row */
 
-#include "my_alloc.h"
+#include "include/my_alloc.h"
 
 typedef struct embedded_query_result EMBEDDED_QUERY_RESULT;
 typedef struct st_mysql_data {

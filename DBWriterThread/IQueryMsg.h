@@ -3,10 +3,10 @@
 class IQueryMsg
 {
 public:
-	IQueryMsg(char* schemaName, char* tableName) : _schemaName(schemaName), _tableName(tableName) {}
+	IQueryMsg() {}
 	virtual ~IQueryMsg() {}
 
-	virtual char* CreateQuery(int) = 0;
+	virtual char* CreateQuery() = 0;
 
 protected:
 

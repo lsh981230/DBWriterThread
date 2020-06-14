@@ -9,6 +9,7 @@ public:
 	void	StopThread() { _bTurnOff = true; }
 
 	void	EnqueueMsg(IQueryMsg* pMsg);
+	void	DBConnect();
 
 private:
 	static UINT WINAPI DBSaveThread(LPVOID);
@@ -23,7 +24,6 @@ private:
 
 	// DB 관련 함수
 
-	void DBConnect();
 	void SendQuery(char* pQuery);
 	bool ConnectError(int errorNo);
 
@@ -31,13 +31,13 @@ private:
 
 	LockFreeQueue<IQueryMsg*>	_msgQueue;
 	
-	MYSQL*	_dbLink;
 
-	HANDLE	_hDBThread;
 	HANDLE	_hMsgEnQ;
 
 	char*	_schemaName;
 	bool	_bTurnOff;
 
+	HANDLE	_hDBThread;
+	MYSQL*	_dbLink;
 };
 
