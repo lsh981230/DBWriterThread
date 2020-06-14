@@ -6,14 +6,13 @@
 DBSave::DBSave(char * schemaName) : _schemaName(schemaName)
 {
 	_bTurnOff = false;
-	_hMsgEnQ = CreateEventA(NULL, false, false, nullptr);
+	_hMsgEnQ = CreateEvent(NULL, false, false, nullptr);
 }
 
 
 
 DBSave::~DBSave()
 {
-	printf("A");
 }
 
 
@@ -119,13 +118,13 @@ void DBSave::SwitchMsg()
 
 
 
-void DBSave::DBConnect()
+MYSQL* DBSave::DBConnect()
 {
 	MYSQL conn;
 
 
 	// 초기화
-	_dbLink = mysql_init(&conn);
+	mysql_init(NULL);
 
 
 	// DB 연결
@@ -136,6 +135,8 @@ void DBSave::DBConnect()
 		CLog::Log(L"DB", CLog::LEVEL_ERROR, L"Mysql connection error : %s", mysql_error(&conn));
 		CCrashDump::Crash();
 	}
+
+	return _dbLink;
 }
 
 
@@ -143,7 +144,8 @@ void DBSave::DBConnect()
 
 void DBSave::SendQuery(char * pQuery)
 {
-	int queryRes = mysql_query(_dbLink, pQuery);
+	int queryRes = mysql_query(_dbLink, "SELECT * FROM test_server.account");
+	//int queryRes = mysql_query(_dbLink, pQuery);
 
 	if (queryRes != 0)
 	{
@@ -164,6 +166,7 @@ void DBSave::SendQuery(char * pQuery)
 
 bool DBSave::ConnectError(int errorNo)
 {
+	fprintf(stderr, "ERROR : %s", mysql_error(_dbLink));
 	CLog::Log(L"DB", CLog::LEVEL_WARNING, L"MYSQL Connection has closed, Error No : %d", errorNo);
 
 	// Try Reconnect

@@ -21,7 +21,7 @@ char * QMAccountRegist::CreateQuery()
 {
 	ZeroMemory(_query, sizeof(_query));
 
-	sprintf_s(_query, "INSERT into %s (value) VALUES (%d)", _tableName, ++_value);
+	sprintf_s(_query, "INSERT into %s.%s (value) VALUES (%d)", _schemaName, _tableName, ++_value);
 
 
 	return _query;

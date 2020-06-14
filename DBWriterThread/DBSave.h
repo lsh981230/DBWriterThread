@@ -9,7 +9,7 @@ public:
 	void	StopThread() { _bTurnOff = true; }
 
 	void	EnqueueMsg(IQueryMsg* pMsg);
-	void	DBConnect();
+	MYSQL*	DBConnect();
 
 private:
 	static UINT WINAPI DBSaveThread(LPVOID);
@@ -38,6 +38,8 @@ private:
 	bool	_bTurnOff;
 
 	HANDLE	_hDBThread;
+
+public:
 	MYSQL*	_dbLink;
 };
 
